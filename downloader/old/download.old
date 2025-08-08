@@ -1,0 +1,23 @@
+from pytube import YouTube
+import sys
+import os
+
+def download_youtube_video(url, output_dir="."):
+    try:
+        yt = YouTube(url)
+        stream = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
+        
+        print(f"Downloading: {yt.title}")
+        print(f"Resolution: {stream.resolution}")
+        print(f"Output path: {os.path.abspath(output_dir)}")
+        
+        stream.download(output_path=output_dir)
+        print("✅ Download complete.")
+    except Exception as e:
+        print(f"❌ Failed to download video: {e}")
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: python download_youtube_video.py <YouTube_URL>")
+    else:
+        download_youtube_video(sys.argv[1])
